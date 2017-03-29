@@ -52,6 +52,14 @@ func (e Env) ToBool() (bool, error) {
 	return b, nil
 }
 
+func (e Env) ToString() (string, error) {
+	val, found := lookup(e)
+	if !found {
+		return "", ErrNotSet
+	}
+	return val, nil
+}
+
 // String convert Env to string
 func (e Env) String() string {
 	return string(e)

@@ -13,7 +13,11 @@ func GetRoot(ctx *iris.Context) {
 	timestamp := ctx.URLParam("timestamp")
 	nonce := ctx.URLParam("nonce")
 
-	token := env.TOKEN.String()
+	token, err := env.TOKEN.ToString()
+	if err != nil {
+		log.Printf("get env %s error: %v\n", env.TOKEN.String(), err)
+		return
+	}
 
 	log.Printf("signature: %s\n", signature)
 	log.Printf("timestamp: %s\n", timestamp)
