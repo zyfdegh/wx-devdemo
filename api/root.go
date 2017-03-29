@@ -12,6 +12,7 @@ func GetRoot(ctx *iris.Context) {
 	signature := ctx.URLParam("signature")
 	timestamp := ctx.URLParam("timestamp")
 	nonce := ctx.URLParam("nonce")
+	echostr := ctx.URLParam("echostr")
 
 	token, err := env.TOKEN.ToString()
 	if err != nil {
@@ -22,10 +23,15 @@ func GetRoot(ctx *iris.Context) {
 	log.Printf("signature: %s\n", signature)
 	log.Printf("timestamp: %s\n", timestamp)
 	log.Printf("nonce: %s\n", nonce)
+	log.Printf("echostr: %s\n", echostr)
 	log.Printf("token: %s\n", token)
 
 	ok := svc.CheckSig(token, timestamp, nonce, signature)
 	if !ok {
 		log.Printf("signature not ok\n")
+		return
 	}
+
+	ctx.WriteString(echostr)
+	return
 }
