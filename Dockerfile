@@ -1,12 +1,11 @@
-FROM alpine
-WORKDIR /app
+FROM golang:1.8
+ENV PROJECT $GOPATH/src/github.com/zyfdegh/wx-devdemo
+WORKDIR $PROJECT
+
+COPY . $PROJECT
+
+RUN go test $(go list ./... | grep -v /vendor/) && \
+	go build -o bin/wx-devdemo
+
 EXPOSE 80
-
-# fix library dependencies
-# otherwise golang binary may encounter 'not found' error
-RUN mkdir /lib64 && \
-    ln -s /lib/libc.musl-x86_64.so.1 /lib64/ld-linux-x86-64.so.2
-
-COPY bin/ /app/bin/
-
-CMD bin/wx-devdemo
+CMD ["./bin/wx-devdemo"]
