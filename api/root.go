@@ -20,11 +20,11 @@ func GetRoot(ctx *iris.Context) {
 		return
 	}
 
-	log.Printf("signature: %s\n", signature)
-	log.Printf("timestamp: %s\n", timestamp)
-	log.Printf("nonce: %s\n", nonce)
-	log.Printf("echostr: %s\n", echostr)
-	log.Printf("token: %s\n", token)
+	// log.Printf("signature: %s\n", signature)
+	// log.Printf("timestamp: %s\n", timestamp)
+	// log.Printf("nonce: %s\n", nonce)
+	// log.Printf("echostr: %s\n", echostr)
+	// log.Printf("token: %s\n", token)
 
 	ok := svc.CheckSig(token, timestamp, nonce, signature)
 	if !ok {

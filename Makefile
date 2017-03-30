@@ -31,7 +31,12 @@ build:
 	docker build -t zyfdedh/wx-devdemo .
 
 run:
-	docker run --rm -p 80:80 -e TOKEN=${TOKEN} zyfdedh/wx-devdemo
+	docker run --rm -p 80:80 \
+		-e TOKEN=${TOKEN} \
+		-e APPID=${APPID} \
+		-e SECRET=${SECRET} \
+		-e POLLING_SEC=7190 \
+		zyfdedh/wx-devdemo
 
 push: build
 	docker push zyfdedh/wx-devdemo .
