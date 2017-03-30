@@ -22,6 +22,9 @@ test-local:
 clean-local:
 	rm -rf bin/*
 
+fmt:
+	go fmt $(go list ./... | grep -v /vendor/)
+
 # Build, test, run in Docker container
 
 build:
