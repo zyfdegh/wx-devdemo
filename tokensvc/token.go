@@ -13,8 +13,8 @@ import (
 const (
 	defaultAPIBaseURL = "https://api.weixin.qq.com/cgi-bin/token"
 	defaultGrantType  = "client_credential"
-	// refresh token every 7190s(a little less than 2 hour) by default
-	defaultPullingSec = 7190
+	// refresh token every 7100s(a little less than 2 hour) by default
+	defaultPullingSec = 7100
 )
 
 var (

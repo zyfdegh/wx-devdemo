@@ -35,7 +35,7 @@ run:
 		-e TOKEN=${TOKEN} \
 		-e APPID=${APPID} \
 		-e SECRET=${SECRET} \
-		-e POLLING_SEC=7190 \
+		-e POLLING_SEC=7100 \
 		zyfdedh/wx-devdemo
 
 push: build

@@ -32,7 +32,7 @@ export TOKEN=some-wechat-token
 export APPID=some-wechat-appid
 export SECRET=some-wechat-appsecret
 # optinal, token refresh period in seconds
-# export POLLING_SEC=7190
+# export POLLING_SEC=7100
 
 make run
 ```
