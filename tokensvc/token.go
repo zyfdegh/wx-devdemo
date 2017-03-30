@@ -26,14 +26,16 @@ var (
 	ErrFetchToken = errors.New("fetch access token failed")
 )
 
+type Token string
+
 type AccessToken struct {
-	Token    string `json:"access_token"`
-	ExpireIn int    `json:"expires_in"`
+	Token    Token `json:"access_token"`
+	ExpireIn int   `json:"expires_in"`
 }
 
 type TokenDaemon struct {
 	IsRunning bool
-	token     string
+	token     Token
 	ticker    *time.Ticker
 	Config    DaemonConfig
 	// Start() error
@@ -113,13 +115,17 @@ func (d *TokenDaemon) refreshToken() error {
 	d.token = accessToken.Token
 	// record last refreshed timestamp
 	// or log timestamp
+	// log.Printf("access token: %s\n", string(d.token))
 	log.Printf("access token refreshed, will expire in %d sec\n", accessToken.ExpireIn)
 
 	return nil
 }
 
-func (d *TokenDaemon) GetToken() string {
-	return string(d.token)
+func (d *TokenDaemon) GetToken() (string, error) {
+	if len(string(d.token)) == 0 {
+		return "", ErrEmptyToken
+	}
+	return string(d.token), nil
 }
 
 // call WeChat token API and fetch token
@@ -158,4 +164,12 @@ func fetchAccessToken(apiBaseURL string, grantType, appID, secret string) (acces
 	}
 
 	return
+}
+
+func (t Token) String() string {
+	if len(t) == 0 {
+		return ""
+	} else {
+		return "***"
+	}
 }
