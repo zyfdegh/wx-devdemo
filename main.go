@@ -15,6 +15,7 @@ func main() {
 		httprouter.New())
 
 	app.Get("/", api.GetRoot)
+	app.Get("/ping", api.GetPing)
 
 	app.Listen(":80")
 }
