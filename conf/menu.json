@@ -1,0 +1,34 @@
+{
+	"button":[
+	{
+		 "type":"click",
+		 "name":"主页",
+		 "key":"M00_HOME"
+	 },
+	 {
+		  "name":"功能",
+		  "sub_button":[
+		  {
+			  "type":"view",
+			  "name":"商品",
+			  "url":"http://www.soso.com/",
+			  "key":"M10_GOOD"
+		   },
+		   {
+			  "type":"click",
+			  "name":"资助",
+			  "key":"M12_DONATE"
+		  },
+		   {
+			  "type":"click",
+			  "name":"其他",
+			  "key":"M12_OTHER"
+		   }]
+	  },
+	  {
+		   "type":"click",
+		   "name":"关于",
+		   "key":"M20_ABOUT"
+	   }
+  ]
+}
