@@ -26,6 +26,12 @@ func GetRoot(ctx *iris.Context) {
 	// log.Printf("echostr: %s\n", echostr)
 	// log.Printf("token: %s\n", token)
 
+	if len(signature) == 0 || len(timestamp) == 0 ||
+		len(nonce) == 0 || len(echostr) == 0 {
+		log.Println("refuse to check, lack of query params")
+		return
+	}
+
 	ok := svc.CheckSig(token, timestamp, nonce, signature)
 	if !ok {
 		log.Printf("signature not ok\n")
