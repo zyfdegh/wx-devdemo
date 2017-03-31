@@ -4,7 +4,6 @@ import (
 	"log"
 
 	"github.com/zyfdegh/wx-devdemo/api"
-	"github.com/zyfdegh/wx-devdemo/svc"
 	"github.com/zyfdegh/wx-devdemo/tokensvc"
 
 	"gopkg.in/kataras/iris.v6"
@@ -24,6 +23,7 @@ func main() {
 
 	app.Get("/", api.GetRoot)
 	app.Get("/ping", api.GetPing)
+	app.Post("/msg", api.ReceiveMsg)
 
 	// start access token service
 	if err := tokensvc.Start(); err != nil {
