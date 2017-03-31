@@ -23,7 +23,7 @@ func main() {
 
 	app.Get("/", api.GetRoot)
 	app.Get("/ping", api.GetPing)
-	app.Post("/msg", api.ReceiveMsg)
+	app.Post("/", api.ReceiveMsg)
 
 	// start access token service
 	if err := tokensvc.Start(); err != nil {
