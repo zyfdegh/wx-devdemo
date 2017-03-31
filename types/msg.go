@@ -87,6 +87,7 @@ type LinkMsg struct {
 
 // Reply
 type Reply struct {
+	XMLName      string `xml:"xml"`
 	ToUserName   string `xml:"ToUserName"`
 	FromUserName string `xml:"FromUserName"`
 	CreateTime   int64  `xml:"CreateTime"`

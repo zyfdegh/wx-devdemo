@@ -159,6 +159,7 @@ func fetchAccessToken(apiBaseURL string, grantType, appID, secret string) (acces
 	accessToken = &AccessToken{}
 	err = json.Unmarshal(data, accessToken)
 	if err != nil {
+		log.Printf("resp body data: %s\n", data)
 		log.Printf("unmarshal json error: %v\n", err)
 		return
 	}

@@ -2,6 +2,7 @@ package api
 
 import (
 	"encoding/xml"
+	"fmt"
 	"github.com/zyfdegh/wx-devdemo/svc"
 	"github.com/zyfdegh/wx-devdemo/types"
 	"gopkg.in/kataras/iris.v6"
@@ -11,6 +12,7 @@ import (
 
 // ReceiveMsg handles POST /msg
 // Example msg(TextMsg):
+//
 // <xml>
 //  <ToUserName><![CDATA[toUser]]></ToUserName>
 //  <FromUserName><![CDATA[fromUser]]></FromUserName>
@@ -19,8 +21,19 @@ import (
 //  <Content><![CDATA[this is a test]]></Content>
 //  <MsgId>1234567890123456</MsgId>
 //  </xml>
+//
+// Example reply(TextReply):
+//
+// <xml>
+// <ToUserName><![CDATA[toUser]]></ToUserName>
+// <FromUserName><![CDATA[fromUser]]></FromUserName>
+// <CreateTime>12345678</CreateTime>
+// <MsgType><![CDATA[text]]></MsgType>
+// <Content><![CDATA[hello, user]]></Content>
+// </xml>
 func ReceiveMsg(ctx *iris.Context) {
 	// log.Printf("url params: %+v\n", ctx.URLParams())
+	fmt.Println("\n")
 
 	reqBody, err := ioutil.ReadAll(ctx.Request.Body)
 	if err != nil {
@@ -124,7 +137,8 @@ func ReceiveMsg(ctx *iris.Context) {
 		return
 	}
 
-	log.Printf("reply text: %v\n", textReply.Content)
+	log.Printf("reply: %+v\n", textReply)
+
 	ctx.XML(iris.StatusOK, textReply)
 	return
 }
