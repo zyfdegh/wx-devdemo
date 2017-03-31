@@ -7,10 +7,11 @@ import (
 )
 
 var (
-	DaemonInstance *TokenDaemon
+	// D is the running instance of daemon
+	D *TokenDaemon
 )
 
-func Start()(err error){
+func Start() (err error) {
 	appID, _ := env.APPID.ToString()
 	secret, _ := env.SECRET.ToString()
 	pollingSec, _ := env.POLLING_SEC.ToInt()
@@ -20,8 +21,8 @@ func Start()(err error){
 	log.Printf("POLLING_SEC: %d\n", pollingSec)
 
 	config := DaemonConfig{
-		AppID:  appID,
-		Secret: secret,
+		AppID:      appID,
+		Secret:     secret,
 		PollingSec: pollingSec,
 	}
 
@@ -31,10 +32,10 @@ func Start()(err error){
 		return
 	}
 	err = daemon.Start()
-	if err!=nil{
+	if err != nil {
 		log.Printf("start token daemon error: %v\n", err)
 		return
 	}
-	DaemonInstance = daemon
+	D = daemon
 	return
 }

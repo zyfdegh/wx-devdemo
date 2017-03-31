@@ -12,6 +12,7 @@ dep-update:
 
 build-local:
 	go build -o bin/wx-devdemo
+	cp -r conf/ bin/
 
 run-local:
 	./bin/wx-devdemo
