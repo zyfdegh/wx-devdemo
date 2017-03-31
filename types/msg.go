@@ -12,6 +12,9 @@ const (
 	ShortVideo = "shortvideo"
 	Location   = "location"
 	Link       = "link"
+
+	// KeyMsgType is the key name of field MsgType
+	KeyMsgType = "MsgType"
 )
 
 // Msg
@@ -182,6 +185,7 @@ func NewTextReply() (textReply *TextReply) {
 // with ToUserName set to msg.FromUserName
 func NewTextReplyToMsg(msg Msg) (textReply *TextReply) {
 	textReply = NewTextReply()
-	textReply.Reply = *NewReplyToMsg(msg)
+	textReply.FromUserName = msg.ToUserName
+	textReply.ToUserName = msg.FromUserName
 	return
 }

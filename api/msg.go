@@ -1,52 +1,135 @@
 package api
 
 import (
+	"encoding/xml"
 	"github.com/zyfdegh/wx-devdemo/svc"
 	"github.com/zyfdegh/wx-devdemo/types"
 	"gopkg.in/kataras/iris.v6"
+	"io/ioutil"
 	"log"
 )
 
 // ReceiveMsg handles POST /msg
+// Example msg(TextMsg):
+// <xml>
+//  <ToUserName><![CDATA[toUser]]></ToUserName>
+//  <FromUserName><![CDATA[fromUser]]></FromUserName>
+//  <CreateTime>1348831860</CreateTime>
+//  <MsgType><![CDATA[text]]></MsgType>
+//  <Content><![CDATA[this is a test]]></Content>
+//  <MsgId>1234567890123456</MsgId>
+//  </xml>
 func ReceiveMsg(ctx *iris.Context) {
-	log.Printf("url params: %+v\n", ctx.URLParams())
+	// log.Printf("url params: %+v\n", ctx.URLParams())
 
-	var msg interface{}
-	err := ctx.ReadXML(msg)
+	reqBody, err := ioutil.ReadAll(ctx.Request.Body)
 	if err != nil {
-		log.Printf("read xml msg error: %v\n", err)
+		log.Printf("read body error: %v\n", err)
+		dumbReply(ctx)
 		return
 	}
 
-	log.Printf("msg: %+v\n", msg)
+	var msgType string
+	m := &types.Msg{}
+	err = xml.Unmarshal(reqBody, m)
+	if err != nil {
+		log.Printf("parse body to msg error: %v\n", err)
+		dumbReply(ctx)
+		return
+	}
+	msgType = m.MsgType
+
+	log.Printf("got msg, type: %s\n", msgType)
 
 	var textReply = &types.TextReply{}
 
-	switch msg.(types.Msg).MsgType {
+	switch msgType {
 	case types.Text:
-		textReply, err = svc.HandleTextMsg(msg.(types.TextMsg))
+		textMsg := types.TextMsg{}
+		err = xml.Unmarshal(reqBody, &textMsg)
+		if err != nil {
+			log.Printf("read xml to textMsg error: %v\n", err)
+			break
+		}
+		log.Printf("textMsg: %+v\n", textMsg)
+		textReply, err = svc.HandleTextMsg(textMsg)
 	case types.Image:
-		textReply, err = svc.HandleImageMsg(msg.(types.ImageMsg))
+		imageMsg := types.ImageMsg{}
+		err = xml.Unmarshal(reqBody, &imageMsg)
+		if err != nil {
+			log.Printf("read xml to imageMsg error: %v\n", err)
+			break
+		}
+		log.Printf("imageMsg: %+v\n", imageMsg)
+		textReply, err = svc.HandleImageMsg(imageMsg)
 	case types.Voice:
-		textReply, err = svc.HandleVoiceMsg(msg.(types.VoiceMsg))
+		voiceMsg := types.VoiceMsg{}
+		err = xml.Unmarshal(reqBody, &voiceMsg)
+		if err != nil {
+			log.Printf("read xml to voiceMsg error: %v\n", err)
+			break
+		}
+		log.Printf("voiceMsg: %+v\n", voiceMsg)
+		textReply, err = svc.HandleVoiceMsg(voiceMsg)
 	case types.Video:
-		textReply, err = svc.HandleVideoMsg(msg.(types.VideoMsg))
+		videoMsg := types.VideoMsg{}
+		err = xml.Unmarshal(reqBody, &videoMsg)
+		if err != nil {
+			log.Printf("read xml to videoMsg error: %v\n", err)
+			break
+		}
+		log.Printf("videoMsg: %+v\n", videoMsg)
+		textReply, err = svc.HandleVideoMsg(videoMsg)
 	case types.ShortVideo:
-		textReply, err = svc.HandleShortVideoMsg(msg.(types.ShortVideoMsg))
+		shortVideoMsg := types.ShortVideoMsg{}
+		err = xml.Unmarshal(reqBody, &shortVideoMsg)
+		if err != nil {
+			log.Printf("read xml to shortVideoMsg error: %v\n", err)
+			break
+		}
+		log.Printf("shortVideoMsg: %+v\n", shortVideoMsg)
+		textReply, err = svc.HandleShortVideoMsg(shortVideoMsg)
 	case types.Location:
-		textReply, err = svc.HandleLocationMsg(msg.(types.LocationMsg))
+		locationMsg := types.LocationMsg{}
+		err = xml.Unmarshal(reqBody, &locationMsg)
+		if err != nil {
+			log.Printf("read xml to locationMsg error: %v\n", err)
+			break
+		}
+		log.Printf("locationMsg: %+v\n", locationMsg)
+		textReply, err = svc.HandleLocationMsg(locationMsg)
 	case types.Link:
-		textReply, err = svc.HandleLinkMsg(msg.(types.LinkMsg))
+		linkMsg := types.LinkMsg{}
+		err = xml.Unmarshal(reqBody, &linkMsg)
+		if err != nil {
+			log.Printf("read xml to linkMsg error: %v\n", err)
+			break
+		}
+		log.Printf("linkMsg: %+v\n", linkMsg)
+		textReply, err = svc.HandleLinkMsg(linkMsg)
 	default:
-		textReply, err = svc.HandleUnknownMsg(msg.(types.Msg))
+		msg := types.Msg{}
+		err = xml.Unmarshal(reqBody, &msg)
+		if err != nil {
+			log.Printf("read xml to msg error: %v\n", err)
+			break
+		}
+		log.Printf("msg: %+v\n", msg)
+		textReply, err = svc.HandleUnknownMsg(msg)
 	}
 
 	if err != nil {
-		log.Printf("handle msg error: %v\n", err)
-		ctx.WriteString("success")
+		log.Printf("handle %s msg error: %v\n", msgType, err)
+		dumbReply(ctx)
 		return
 	}
 
+	log.Printf("reply text: %v\n", textReply.Content)
 	ctx.XML(iris.StatusOK, textReply)
+	return
+}
+
+func dumbReply(ctx *iris.Context) {
+	ctx.WriteString("success")
 	return
 }

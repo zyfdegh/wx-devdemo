@@ -13,42 +13,42 @@ func HandleTextMsg(msg types.TextMsg) (reply *types.TextReply, err error) {
 
 func HandleImageMsg(msg types.ImageMsg) (reply *types.TextReply, err error) {
 	reply = types.NewTextReplyToMsg(msg.Msg)
-	reply.Content = fmt.Sprintf("well, type %s", msg.MsgType)
+	reply.Content = fmt.Sprintf("well, you send me a %s", msg.MsgType)
 	return
 }
 
 func HandleVoiceMsg(msg types.VoiceMsg) (reply *types.TextReply, err error) {
 	reply = types.NewTextReplyToMsg(msg.Msg)
-	reply.Content = fmt.Sprintf("well, type %s", msg.MsgType)
+	reply.Content = fmt.Sprintf("well, you send me a %s", msg.MsgType)
 	return
 }
 
 func HandleVideoMsg(msg types.VideoMsg) (reply *types.TextReply, err error) {
 	reply = types.NewTextReplyToMsg(msg.Msg)
-	reply.Content = fmt.Sprintf("well, type %s", msg.MsgType)
+	reply.Content = fmt.Sprintf("well, you send me a %s", msg.MsgType)
 	return
 }
 
 func HandleShortVideoMsg(msg types.ShortVideoMsg) (reply *types.TextReply, err error) {
 	reply = types.NewTextReplyToMsg(msg.Msg)
-	reply.Content = fmt.Sprintf("well, type %s", msg.MsgType)
+	reply.Content = fmt.Sprintf("well, you send me a %s", msg.MsgType)
 	return
 }
 
 func HandleLocationMsg(msg types.LocationMsg) (reply *types.TextReply, err error) {
 	reply = types.NewTextReplyToMsg(msg.Msg)
-	reply.Content = fmt.Sprintf("well, type %s", msg.MsgType)
+	reply.Content = fmt.Sprintf("well, you send me a %s", msg.MsgType)
 	return
 }
 
 func HandleLinkMsg(msg types.LinkMsg) (reply *types.TextReply, err error) {
 	reply = types.NewTextReplyToMsg(msg.Msg)
-	reply.Content = fmt.Sprintf("well, type %s", msg.MsgType)
+	reply.Content = fmt.Sprintf("well, you send me a %s", msg.MsgType)
 	return
 }
 
 func HandleUnknownMsg(msg types.Msg) (reply *types.TextReply, err error) {
 	reply = types.NewTextReplyToMsg(msg)
-	reply.Content = fmt.Sprintf("well, type %s", msg.MsgType)
+	reply.Content = fmt.Sprintf("well, you send me a %s", msg.MsgType)
 	return
 }
