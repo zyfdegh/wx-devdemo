@@ -8,6 +8,10 @@ import (
 func HandleTextMsg(msg types.TextMsg) (reply *types.TextReply, err error) {
 	reply = types.NewTextReplyToMsg(msg.Msg)
 	reply.Content = fmt.Sprintf("well, %s", msg.Content)
+
+	if msg.Content == "1" {
+		reply.Content = fmt.Sprintf("233，想多了，并没有惊喜，愚人节快乐(๑•́ ₃ •̀๑)")
+	}
 	return
 }
 
@@ -49,6 +53,6 @@ func HandleLinkMsg(msg types.LinkMsg) (reply *types.TextReply, err error) {
 
 func HandleUnknownMsg(msg types.Msg) (reply *types.TextReply, err error) {
 	reply = types.NewTextReplyToMsg(msg)
-	reply.Content = fmt.Sprintf("well, you send me a %s", msg.MsgType)
+	reply.Content = fmt.Sprintf("well, you send me a unknown type of msg: %s", msg.MsgType)
 	return
 }

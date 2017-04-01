@@ -12,6 +12,7 @@ const (
 	ShortVideo = "shortvideo"
 	Location   = "location"
 	Link       = "link"
+	Event      = "event"
 
 	// KeyMsgType is the key name of field MsgType
 	KeyMsgType = "MsgType"
@@ -188,5 +189,14 @@ func NewTextReplyToMsg(msg Msg) (textReply *TextReply) {
 	textReply = NewTextReply()
 	textReply.FromUserName = msg.ToUserName
 	textReply.ToUserName = msg.FromUserName
+	return
+}
+
+// NewTextReplyToEvent construct a TextReply using input Msg
+// with CreateTime set to now
+// with FromUserName set to msg.ToUserName
+// with ToUserName set to msg.FromUserName
+func NewTextReplyToEvent(msg Msg) (textReply *TextReply) {
+	textReply = NewTextReplyToMsg(msg)
 	return
 }

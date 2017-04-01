@@ -43,8 +43,8 @@ func ReceiveMsg(ctx *iris.Context) {
 	}
 
 	var msgType string
-	m := &types.Msg{}
-	err = xml.Unmarshal(reqBody, m)
+	m := types.Msg{}
+	err = xml.Unmarshal(reqBody, &m)
 	if err != nil {
 		log.Printf("parse body to msg error: %v\n", err)
 		dumbReply(ctx)
@@ -120,15 +120,12 @@ func ReceiveMsg(ctx *iris.Context) {
 		}
 		log.Printf("linkMsg: %+v\n", linkMsg)
 		textReply, err = svc.HandleLinkMsg(linkMsg)
+	case types.Event:
+		handleEventMsg(ctx, &reqBody)
+		return
 	default:
-		msg := types.Msg{}
-		err = xml.Unmarshal(reqBody, &msg)
-		if err != nil {
-			log.Printf("read xml to msg error: %v\n", err)
-			break
-		}
-		log.Printf("msg: %+v\n", msg)
-		textReply, err = svc.HandleUnknownMsg(msg)
+		log.Printf("msg: %+v\n", m)
+		textReply, err = svc.HandleUnknownMsg(m)
 	}
 
 	if err != nil {
@@ -143,7 +140,86 @@ func ReceiveMsg(ctx *iris.Context) {
 	return
 }
 
-func dumbReply(ctx *iris.Context) {
-	ctx.WriteString("success")
+// handleEventMsg handles event messages
+func handleEventMsg(ctx *iris.Context, rawEventMsg *[]byte) {
+	eventMsg := types.EventMsg{}
+	err := xml.Unmarshal(*rawEventMsg, &eventMsg)
+	if err != nil {
+		log.Printf("read xml to eventMsg error: %v\n", err)
+		return
+	}
+	var eventType = eventMsg.Event
+
+	var textReply = &types.TextReply{}
+
+	switch eventType {
+	case types.EventSubscribe:
+		subScribeEvent := types.SubscribeEvent{}
+		err := xml.Unmarshal(*rawEventMsg, &subScribeEvent)
+		if err != nil {
+			log.Printf("read xml to subScribeEvent error: %v\n", err)
+			return
+		}
+		log.Printf("subScribeEvent msg: %+v\n", subScribeEvent)
+		// contains EventScanSubscribe
+		textReply, err = svc.HandleSubscribeEvent(subScribeEvent)
+	case types.EventUnsubscribe:
+		unsubscribeEvent := types.UnsubscribeEvent{}
+		err := xml.Unmarshal(*rawEventMsg, &unsubscribeEvent)
+		if err != nil {
+			log.Printf("read xml to unsubscribeEvent error: %v\n", err)
+			return
+		}
+		log.Printf("unsubscribeEvent msg: %+v\n", unsubscribeEvent)
+		err = svc.HandleUnsubscribeEvent(unsubscribeEvent)
+	case types.EventScan:
+		scanEvent := types.ScanEvent{}
+		err := xml.Unmarshal(*rawEventMsg, &scanEvent)
+		if err != nil {
+			log.Printf("read xml to scanEvent error: %v\n", err)
+			return
+		}
+		log.Printf("scanEvent msg: %+v\n", scanEvent)
+		err = svc.HandleScanEvent(scanEvent)
+	case types.EventLocation:
+		locationEvent := types.LocationEvent{}
+		err := xml.Unmarshal(*rawEventMsg, &locationEvent)
+		if err != nil {
+			log.Printf("read xml to locationEvent error: %v\n", err)
+			return
+		}
+		log.Printf("locationEvent msg: %+v\n", locationEvent)
+		err = svc.HandleLocationEvent(locationEvent)
+	case types.EventClick:
+		clickEvent := types.ClickEvent{}
+		err := xml.Unmarshal(*rawEventMsg, &clickEvent)
+		if err != nil {
+			log.Printf("read xml to clickEvent error: %v\n", err)
+			return
+		}
+		log.Printf("clickEvent msg: %+v\n", clickEvent)
+		err = svc.HandleClickEvent(clickEvent)
+	case types.EventView:
+		viewEvent := types.ViewEvent{}
+		err := xml.Unmarshal(*rawEventMsg, &viewEvent)
+		if err != nil {
+			log.Printf("read xml to viewEvent error: %v\n", err)
+			return
+		}
+		log.Printf("viewEvent msg: %+v\n", viewEvent)
+		err = svc.HandleViewEvent(viewEvent)
+	default:
+		log.Printf("event msg: %+v\n", eventMsg)
+		textReply, err = svc.HandleUnknownEvent(eventMsg)
+	}
+
+	if err != nil {
+		log.Printf("handle %s event error: %v\n", eventType, err)
+		dumbReply(ctx)
+		return
+	}
+
+	log.Printf("reply: %+v\n", textReply)
+	ctx.XML(iris.StatusOK, textReply)
 	return
 }
