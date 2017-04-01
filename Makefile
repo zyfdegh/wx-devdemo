@@ -29,7 +29,7 @@ fmt:
 # Build, test, run in Docker container
 
 build:
-	docker build -t zyfdedh/wx-devdemo .
+	docker build -t zyfdedh/wx-devdemo:execite .
 
 run:
 	docker run --rm -p 80:80 \
@@ -37,7 +37,7 @@ run:
 		-e APPID=${APPID} \
 		-e SECRET=${SECRET} \
 		-e POLLING_SEC=7100 \
-		zyfdedh/wx-devdemo
+		zyfdedh/wx-devdemo:execite
 
 push: build
-	docker push zyfdedh/wx-devdemo .
+	docker push zyfdedh/wx-devdemo:execite .
