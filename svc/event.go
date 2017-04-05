@@ -7,7 +7,7 @@ import (
 
 func HandleSubscribeEvent(event types.SubscribeEvent) (reply *types.TextReply, err error) {
 	reply = types.NewTextReplyToEvent(event.Msg)
-	reply.Content = fmt.Sprintf("%s", "蟹蟹关注这个测试号，回复1有惊喜")
+	reply.Content = fmt.Sprintf("%s", "谢谢关注这个测试号~")
 	return
 }
 
