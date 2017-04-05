@@ -20,5 +20,5 @@ func main() {
 
 func hello(res http.ResponseWriter, req *http.Request) {
 	log.Println("handle get / ...")
-	fmt.Fprintf(res, "hello, world from %s by zyfdegh", runtime.Version())
+	fmt.Fprintf(res, "hello, world from %s by zyfdegh on github", runtime.Version())
 }
