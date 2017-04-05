@@ -9,9 +9,6 @@ func HandleTextMsg(msg types.TextMsg) (reply *types.TextReply, err error) {
 	reply = types.NewTextReplyToMsg(msg.Msg)
 	reply.Content = fmt.Sprintf("well, %s", msg.Content)
 
-	if msg.Content == "1" {
-		reply.Content = fmt.Sprintf("233，想多了，并没有惊喜，愚人节快乐(๑•́ ₃ •̀๑)")
-	}
 	return
 }
 
