@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"github.com/zyfdegh/wx-devdemo/types"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -18,7 +19,7 @@ const (
 )
 
 var (
-	// ErrAlreadyRunning returned when token daemon is already running
+	// ErrDaemonAlreadyRunning returned when token daemon is already running
 	ErrDaemonAlreadyRunning = errors.New("token daemon is already running")
 	// ErrEmptyToken returned when token is empty
 	ErrEmptyToken = errors.New("token empty")
@@ -28,14 +29,9 @@ var (
 
 type Token string
 
-type AccessToken struct {
-	Token    Token `json:"access_token"`
-	ExpireIn int   `json:"expires_in"`
-}
-
 type TokenDaemon struct {
 	IsRunning bool
-	token     Token
+	token     types.Token
 	ticker    *time.Ticker
 	Config    DaemonConfig
 	// Start() error
@@ -94,10 +90,14 @@ func (d *TokenDaemon) start() error {
 // clear token
 // stop timer
 func (d *TokenDaemon) Stop() error {
-	d.token = ""
+	d.dropToken()
 	d.IsRunning = false
 	d.ticker.Stop()
 	return nil
+}
+
+func (d *TokenDaemon) dropToken() {
+	d.token = ""
 }
 
 func (d *TokenDaemon) RefreshToken() error {
@@ -131,7 +131,7 @@ func (d *TokenDaemon) GetToken() (string, error) {
 // call WeChat token API and fetch token
 // GET https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=APPID&secret=APPSECRET
 // {"access_token":"ACCESS_TOKEN","expires_in":7200}
-func fetchAccessToken(apiBaseURL string, grantType, appID, secret string) (accessToken *AccessToken, err error) {
+func fetchAccessToken(apiBaseURL string, grantType, appID, secret string) (accessToken *types.AccessToken, err error) {
 	if len(apiBaseURL) == 0 {
 		apiBaseURL = defaultAPIBaseURL
 	}
@@ -156,7 +156,7 @@ func fetchAccessToken(apiBaseURL string, grantType, appID, secret string) (acces
 		return
 	}
 
-	accessToken = &AccessToken{}
+	accessToken = &types.AccessToken{}
 	err = json.Unmarshal(data, accessToken)
 	if err != nil {
 		log.Printf("resp body data: %s\n", data)
